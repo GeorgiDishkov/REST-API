@@ -33,14 +33,34 @@ router.post(`/`, async (req, res) => {
 
 })
 
-router.put(`/`, async (req, res) => {
-    const result = await api.getById(req.params.id);
+router.get('/:id', async (req, res) => {
+    const result = await api.getById(req.params.id)
     res.json(result);
+    res.end;
+})
+
+router.put(`/:id`, async (req, res) => {
+    const repair = {
+        typeOfRepair: req.body.typeOfRepair,
+        carOwner: req.body.carOwner,
+        carRegistration: req.body.carRegistration,
+        priceOfRepair: req.body.priceOfRepair,
+        costForRepair: req.body.costForRepair,
+    }
+    try {
+        const result = await api.update(repair);
+        res.json(result)
+    } catch (err) {
+        console.error(err.message);
+        const error = mapErrors(err).join(`\n`)
+        res.status(400).json({ message: error });
+    }
+
     res.end();
 })
 
-router.delete(`/`, (req, res) => {
-    console.log(`DELETE catalog`);
+router.delete(`/:id`, async (req, res) => {
+    await api.dell(req.params.id)
     res.end();
 })
 

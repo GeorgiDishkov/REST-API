@@ -17,10 +17,29 @@ async function create(repairInfo) {
     return result;
 }
 
+async function update(id, repair) {
+    const existing = await Repair.findById(id);
+
+    existing.typeOfRepair = data.typeOfRepair;
+    existing.carOwner = data.carOwner;
+    existing.carRegistration = data.carRegistration;
+    existing.priceOfRepair = data.priceOfRepair;
+    existing.costForRepair = data.costForRepair;
+
+    await existing.save();
+
+    return existing;
+}
+
+async function dell(id) {
+    await Repair.findByIdAndDelete(id);
+}
 
 
 module.exports = {
     getAll,
     getById,
     create,
+    update,
+    dell
 }
