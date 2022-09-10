@@ -52,7 +52,7 @@ router.put(`/:id`, async (req, res) => {
         res.json(result)
     } catch (err) {
         console.error(err.message);
-        const error = mapErrors(err).join(`\n`)
+        const error = mapErrors(err)
         res.status(400).json({ message: error });
     }
 
@@ -60,8 +60,14 @@ router.put(`/:id`, async (req, res) => {
 })
 
 router.delete(`/:id`, async (req, res) => {
-    await api.dell(req.params.id)
-    res.end();
+    try {
+        await api.dell(req.params.id)
+        res.status(204).end();
+    } catch (err) {
+        console.error(err.message);
+        const error = mapErrors(err)
+        res.status(400).json({ message: error });
+    }
 })
 
 module.exports = router;

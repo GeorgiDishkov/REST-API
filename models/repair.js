@@ -1,6 +1,6 @@
 const { model, Schema } = require('mongoose');
 
-const schema = Schema({
+const repairSchema = Schema({
     typeOfRepair: { type: String },
     carOwner: { type: String },
     carRegistration: { type: String },
@@ -8,6 +8,13 @@ const schema = Schema({
     costForRepair: { type: Number },
 })
 
-const repairSchema = model('Repair', schema);
+repairSchema.index({ carRegistration: 1 }, {
+    collation: {
+        locale: 'en',
+        strength: 1,
+    }
+})
 
-module.exports = repairSchema;
+const Repair = model('Repair', repairSchema);
+
+module.exports = Repair;

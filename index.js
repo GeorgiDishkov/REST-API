@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const cors = require('./middleware/cors');
 
 const catalogControler = require('./contorllers/catalog')
+const userControler = require('./contorllers/user')
 
 const PORT = 3030;
 
@@ -25,6 +26,7 @@ async function start() {
     app.use(express.json());
     app.use(cors());
     app.use('/data/catalog', catalogControler)
+    app.use('/user', userControler)
 
     app.get(`/`, (req, res) => res.json({ messsage: 'REST Services operational' }))
 
