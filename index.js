@@ -3,9 +3,10 @@ const mongoose = require('mongoose');
 const cors = require('./middleware/cors');
 
 const catalogControler = require('./contorllers/catalog')
-const userControler = require('./contorllers/user')
+const userControler = require('./contorllers/user');
+const auth = require('./middleware/auth');
 
-const PORT = 3030;
+const PORT = 3000;
 
 start()
 
@@ -25,6 +26,7 @@ async function start() {
     const app = express();
     app.use(express.json());
     app.use(cors());
+    app.use(auth());
     app.use('/data/catalog', catalogControler)
     app.use('/user', userControler)
 

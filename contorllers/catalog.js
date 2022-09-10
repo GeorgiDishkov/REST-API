@@ -1,4 +1,6 @@
 const router = require('express').Router();
+const { isAuth, isOwner } = require('../middleware/guard');
+const preload = require('../middleware/preload');
 const api = require('../services/repair');
 const mapErrors = require('../utils/errorMapper');
 
@@ -10,7 +12,7 @@ router.get(`/`, async (req, res) => {
     res.end();
 })
 
-router.post(`/`, async (req, res) => {
+router.post(`/`, isAuth(), async (req, res) => {
 
     // to do mapper for all repairs with same type
     const repair = {
@@ -19,6 +21,7 @@ router.post(`/`, async (req, res) => {
         carRegistration: req.body.carRegistration,
         priceOfRepair: req.body.priceOfRepair,
         costForRepair: req.body.costForRepair,
+        owner: req.user._id,
     }
     try {
         // throw new Error('Test error')
@@ -33,13 +36,13 @@ router.post(`/`, async (req, res) => {
 
 })
 
-router.get('/:id', async (req, res) => {
-    const result = await api.getById(req.params.id)
+router.get('/:id', isAuth(), preload(), (req, res) => {
+    const result = res.locals.repair
     res.json(result);
-    res.end;
 })
 
-router.put(`/:id`, async (req, res) => {
+
+router.put(`/:id`, isAuth(), isOwner(), async (req, res) => {
     const repair = {
         typeOfRepair: req.body.typeOfRepair,
         carOwner: req.body.carOwner,
@@ -55,11 +58,9 @@ router.put(`/:id`, async (req, res) => {
         const error = mapErrors(err)
         res.status(400).json({ message: error });
     }
-
-    res.end();
 })
 
-router.delete(`/:id`, async (req, res) => {
+router.delete(`/:id`, isAuth(), isOwner(), async (req, res) => {
     try {
         await api.dell(req.params.id)
         res.status(204).end();

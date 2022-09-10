@@ -5,9 +5,8 @@ async function getAll() {
     return data;
 }
 
-async function getById(id) {
-    const result = await Repair.findById(id);
-    return result;
+function getById(id) {
+    return Repair.findById(id);
 }
 
 async function create(repairInfo) {
